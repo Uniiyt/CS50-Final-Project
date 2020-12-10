@@ -1,0 +1,836 @@
+package senai.view;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JComboBox;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import senai.dao.CategoriaDAO;
+import senai.dao.ClienteDAO;
+import senai.dao.ColaboradorDAO;
+import senai.dao.ProdutoDAO;
+import senai.entity.CategoriaEntity;
+import senai.entity.ClienteEntity;
+import senai.entity.ColaboradorEntity;
+import senai.entity.ProdutoEntity;
+
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextArea;
+
+public class KJGView {
+
+	private JFrame frame;
+	private JTextField vendaTotalVendaTF;
+	private JTextField produtoNomeTF;
+	private JTextField produtosPrecoTF;
+	private JTextField produtosEstoqueTF;
+	private JTextField clientesNomeTF;
+	private JTextField clienteCpfTF;
+	private JTextField clienteAniversarioTF;
+	private JTextField clientesTelefoneTF;
+	private JTextField colaboradorNomeTF;
+	private JTextField colaboradorCpfTF;
+	private JTextField colaboradoresAniversarioTF;
+	private JTextField colaboradoresCargoTF;
+	private JLabel labelFotoKaren;
+	private JTextField categoriaNomeTF;
+	private JTextField categoriaDescricaoTF;
+	static JTextArea categoriaTA;
+	static JComboBox produtosCategoriaCB;
+	static JTextArea clientesTA;
+	static JTextArea colaboradoreJTextArea;
+	//static 	JTextArea produJTextArea
+	//Listas das entidades do SISTEMA
+	static ArrayList<CategoriaEntity> categorias = new ArrayList<CategoriaEntity>();
+	static ArrayList<ClienteEntity> clientes = new ArrayList<ClienteEntity>();
+	static ArrayList<ColaboradorEntity> colaboradores = new ArrayList<ColaboradorEntity>();
+	static ArrayList<ProdutoEntity> produtos = new ArrayList<ProdutoEntity>();
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					KJGView window = new KJGView();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public KJGView() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		
+		ImageIcon fotoGigi = new ImageIcon("img/gigi.jpg");
+		ImageIcon fotoKa = new ImageIcon("img/kaka.jpg");
+		ImageIcon fotoJuju = new ImageIcon("img/juju.jpg");
+		ImageIcon fotoLogo = new ImageIcon("img/logo.png");
+		ImageIcon fotoSenai = new ImageIcon("img/senaiL.png");
+		
+		frame = new JFrame();
+		frame.setBounds(100, 100, 958, 585);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 11, 920, 523);
+		frame.getContentPane().add(tabbedPane);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("VENDA", null, panel, null);
+		panel.setLayout(null);
+		
+		JLabel lblEfetuarVenda = new JLabel("EFETUAR VENDA:");
+		lblEfetuarVenda.setFont(new Font("Dialog", Font.BOLD, 14));
+		lblEfetuarVenda.setBounds(12, 22, 134, 39);
+		panel.add(lblEfetuarVenda);
+		
+		JLabel lblNewLabel = new JLabel("CLIENTE:");
+		lblNewLabel.setBounds(12, 86, 55, 16);
+		panel.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("VENDEDOR:");
+		lblNewLabel_1.setBounds(12, 123, 71, 16);
+		panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("PRODUTO:");
+		lblNewLabel_2.setBounds(12, 165, 55, 16);
+		panel.add(lblNewLabel_2);
+		
+		JComboBox vendaClienteCB = new JComboBox();
+		vendaClienteCB.setBackground(new Color(255, 255, 255));
+		vendaClienteCB.setBounds(85, 82, 337, 25);
+		panel.add(vendaClienteCB);
+		
+		JComboBox vendaVendedorCB = new JComboBox();
+		vendaVendedorCB.setBackground(new Color(255, 255, 255));
+		vendaVendedorCB.setBounds(85, 119, 337, 25);
+		panel.add(vendaVendedorCB);
+		
+		JComboBox vendaProdutoCB = new JComboBox();
+		vendaProdutoCB.setBackground(new Color(255, 255, 255));
+		vendaProdutoCB.setBounds(97, 161, 155, 25);
+		panel.add(vendaProdutoCB);
+		
+		JButton btnAdd = new JButton("ADD");
+		btnAdd.setBackground(new Color(255, 250, 250));
+		btnAdd.setBounds(187, 207, 65, 26);
+		panel.add(btnAdd);
+		
+		JLabel lblNewLabel_3 = new JLabel("Produto");
+		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 14));
+		lblNewLabel_3.setBounds(12, 207, 88, 25);
+		panel.add(lblNewLabel_3);
+		
+		JLabel lblTotalDaVenda = new JLabel("TOTAL DA VENDA:");
+		lblTotalDaVenda.setBounds(278, 341, 96, 16);
+		panel.add(lblTotalDaVenda);
+		
+		vendaTotalVendaTF = new JTextField();
+		vendaTotalVendaTF.setBounds(392, 339, 114, 20);
+		panel.add(vendaTotalVendaTF);
+		vendaTotalVendaTF.setColumns(10);
+		
+		JLabel lblFormaPagamento = new JLabel("FORMA DE PAGAMENTO:");
+		lblFormaPagamento.setBounds(248, 368, 134, 16);
+		panel.add(lblFormaPagamento);
+		
+		JComboBox vendaFormaPagamentoTF = new JComboBox();
+		vendaFormaPagamentoTF.setModel(new DefaultComboBoxModel(new String[] {"BOLETO", "CARTAO_CREDITO", "CARTAO_DEBITO", "DINHEIRO", "CHEQUE"}));
+		vendaFormaPagamentoTF.setBackground(new Color(255, 255, 255));
+		vendaFormaPagamentoTF.setBounds(392, 365, 114, 25);
+		panel.add(vendaFormaPagamentoTF);
+		
+		JButton btnEfetuarPagamento = new JButton("EFETUAR PAGAMENTO");
+		btnEfetuarPagamento.setBackground(new Color(255, 250, 250));
+		btnEfetuarPagamento.setBounds(292, 397, 162, 26);
+		panel.add(btnEfetuarPagamento);
+		
+		JLabel lblVendasEfetuadas = new JLabel("VENDAS EFETUADAS:");
+		lblVendasEfetuadas.setFont(new Font("Dialog", Font.BOLD, 14));
+		lblVendasEfetuadas.setBounds(515, 22, 197, 49);
+		panel.add(lblVendasEfetuadas);
+		
+		JTextArea vendaEfetuadaTA = new JTextArea();
+		vendaEfetuadaTA.setEditable(false);
+		vendaEfetuadaTA.setBounds(513, 68, 359, 415);
+		panel.add(vendaEfetuadaTA);
+		
+		JTextArea vendaProdTA = new JTextArea();
+		vendaProdTA.setEditable(false);
+		vendaProdTA.setBounds(10, 259, 210, 224);
+		panel.add(vendaProdTA);
+		
+		//JPanprodutoTA = new JTextArea();
+		//produtoTA.setEditable(false);
+		//produtoTA.setBounds(10, 74, 893, 348);
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("CATEGORIA", null, panel_9, null);
+		panel_9.setLayout(null);
+		
+		JLabel lblNewLabel_5 = new JLabel("NOME:");
+		lblNewLabel_5.setBounds(12, 14, 55, 16);
+		panel_9.add(lblNewLabel_5);
+		
+		categoriaNomeTF = new JTextField();
+		categoriaNomeTF.setBounds(69, 12, 152, 20);
+		panel_9.add(categoriaNomeTF);
+		categoriaNomeTF.setColumns(10);
+		
+		JLabel lblDescrio = new JLabel("DESCRI\u00C7\u00C3O:");
+		lblDescrio.setBounds(259, 14, 85, 16);
+		panel_9.add(lblDescrio);
+		
+		categoriaDescricaoTF = new JTextField();
+		categoriaDescricaoTF.setBounds(350, 12, 263, 20);
+		panel_9.add(categoriaDescricaoTF);
+		categoriaDescricaoTF.setColumns(10);
+		
+		JButton btnSalvar_3 = new JButton("SALVAR");
+		btnSalvar_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO Salvar Categoria
+				String nomeCategoria = "";
+				String descricaoCategoria = "";
+				nomeCategoria = categoriaNomeTF.getText();
+				descricaoCategoria = categoriaDescricaoTF.getText();
+				CategoriaEntity cat = new CategoriaEntity(null, nomeCategoria, descricaoCategoria);
+				
+				try {
+					CategoriaDAO.salvar(cat);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				//carregarCategorias();
+				
+				JOptionPane.showMessageDialog(frame, "Categoria Salva: \n"+cat);
+			}
+		});
+		btnSalvar_3.setBackground(new Color(255, 250, 250));
+		btnSalvar_3.setBounds(625, 7, 98, 26);
+		panel_9.add(btnSalvar_3);
+		
+		JButton button = new JButton("DELETAR");
+		button.setBackground(new Color(255, 250, 250));
+		button.setBounds(782, 441, 104, 26);
+		panel_9.add(button);
+		
+		JButton button_1 = new JButton("EDITAR");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		button_1.setBackground(new Color(255, 250, 250));
+		button_1.setBounds(646, 441, 98, 26);
+		panel_9.add(button_1);
+		
+		categoriaTA = new JTextArea();
+		categoriaTA.setEditable(false);
+		categoriaTA.setBounds(12, 52, 893, 378);
+		panel_9.add(categoriaTA);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("CLIENTES", null, panel_2, null);
+		panel_2.setLayout(null);
+		
+		JLabel lblNome_1 = new JLabel("NOME:");
+		lblNome_1.setBounds(12, 12, 43, 16);
+		panel_2.add(lblNome_1);
+		
+		clientesNomeTF = new JTextField();
+		clientesNomeTF.setBounds(52, 10, 158, 20);
+		panel_2.add(clientesNomeTF);
+		clientesNomeTF.setColumns(10);
+		
+		JLabel lblCpf = new JLabel("CPF:");
+		lblCpf.setBounds(228, 12, 31, 16);
+		panel_2.add(lblCpf);
+		
+		clienteCpfTF = new JTextField();
+		clienteCpfTF.setBounds(260, 10, 94, 20);
+		panel_2.add(clienteCpfTF);
+		clienteCpfTF.setColumns(10);
+		
+		JLabel lblAniversario = new JLabel("ANIVERSÁRIO:");
+		lblAniversario.setBounds(367, 12, 81, 16);
+		panel_2.add(lblAniversario);
+		
+		clienteAniversarioTF = new JTextField();
+		clienteAniversarioTF.setBounds(452, 10, 81, 20);
+		panel_2.add(clienteAniversarioTF);
+		clienteAniversarioTF.setColumns(10);
+		
+		JLabel lblTelefone = new JLabel("TELEFONE:");
+		lblTelefone.setBounds(545, 12, 68, 16);
+		panel_2.add(lblTelefone);
+		
+		clientesTelefoneTF = new JTextField();
+		clientesTelefoneTF.setBounds(612, 10, 98, 20);
+		panel_2.add(clientesTelefoneTF);
+		clientesTelefoneTF.setColumns(10);
+		
+		JButton btnSalvar_1 = new JButton("SALVAR");
+		btnSalvar_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO Salvar Clientes
+				String nomeCliente = "";
+				String cpfCliente = "";
+				String dataAniversarioCliente = "";
+				String telefoneCliente = "";
+				nomeCliente = clientesNomeTF.getText();
+				cpfCliente = clienteCpfTF.getText();
+				dataAniversarioCliente = clienteAniversarioTF.getText();
+				telefoneCliente = clientesTelefoneTF.getText();
+				
+				ClienteEntity cliente = new ClienteEntity(null, cpfCliente, nomeCliente, dataAniversarioCliente, telefoneCliente);
+				try {
+				ClienteDAO.salvar(cliente);	
+				} catch (SQLException e) {
+					e.printStackTrace();
+					
+				}
+				carregarClientes();
+				
+				JOptionPane.showMessageDialog(frame, "Cliente salvo! \n"+cliente);
+				
+			}
+		});
+		btnSalvar_1.setBackground(new Color(255, 250, 250));
+		btnSalvar_1.setBounds(722, 7, 81, 26);
+		panel_2.add(btnSalvar_1);
+		
+		JButton button_2 = new JButton("EDITAR");
+		button_2.setBackground(new Color(255, 250, 250));
+		button_2.setBounds(663, 439, 98, 26);
+		panel_2.add(button_2);
+		
+		JButton button_3 = new JButton("DELETAR");
+		button_3.setBackground(new Color(255, 250, 250));
+		button_3.setBounds(799, 439, 104, 26);
+		panel_2.add(button_3);
+		
+		clientesTA = new JTextArea();
+		clientesTA.setEditable(false);
+		clientesTA.setBounds(12, 55, 891, 373);
+		panel_2.add(clientesTA);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("COLABORADORES", null, panel_3, null);
+		panel_3.setLayout(null);
+		
+		JLabel lblNome_2 = new JLabel("NOME:");
+		lblNome_2.setBounds(12, 12, 43, 16);
+		panel_3.add(lblNome_2);
+		
+		colaboradorNomeTF = new JTextField();
+		colaboradorNomeTF.setBounds(60, 10, 139, 20);
+		panel_3.add(colaboradorNomeTF);
+		colaboradorNomeTF.setColumns(10);
+		
+		JLabel lblCpf_1 = new JLabel("CPF:");
+		lblCpf_1.setBounds(204, 12, 33, 16);
+		panel_3.add(lblCpf_1);
+		
+		colaboradorCpfTF = new JTextField();
+		colaboradorCpfTF.setBounds(236, 10, 104, 20);
+		panel_3.add(colaboradorCpfTF);
+		colaboradorCpfTF.setColumns(10);
+		
+		JLabel lblAniversario_1 = new JLabel("ANIVERS\u00C1RIO:");
+		lblAniversario_1.setBounds(346, 12, 81, 16);
+		panel_3.add(lblAniversario_1);
+		
+		colaboradoresAniversarioTF = new JTextField();
+		colaboradoresAniversarioTF.setBounds(435, 10, 88, 20);
+		panel_3.add(colaboradoresAniversarioTF);
+		colaboradoresAniversarioTF.setColumns(10);
+		
+		JLabel lblCargo = new JLabel("CARGO:");
+		lblCargo.setBounds(528, 12, 52, 16);
+		panel_3.add(lblCargo);
+		
+		colaboradoresCargoTF = new JTextField();
+		colaboradoresCargoTF.setBounds(585, 10, 114, 20);
+		panel_3.add(colaboradoresCargoTF);
+		colaboradoresCargoTF.setColumns(10);
+		
+		JButton botaoColaboradorCB = new JButton("SALVAR");
+		botaoColaboradorCB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO Salvar Colaboradores
+				String nomeColaborador = "";
+				String cpfColaborador = "";
+				String dataAniversarioColaborador = "";
+				String cargoColaborador = "";
+				
+				nomeColaborador = colaboradorNomeTF.getText();
+				cpfColaborador = colaboradorCpfTF.getText();
+				dataAniversarioColaborador = colaboradoresAniversarioTF.getText();
+				cargoColaborador = colaboradoresCargoTF.getText();
+				
+				
+				ColaboradorEntity c = new ColaboradorEntity(null, nomeColaborador, cpfColaborador, dataAniversarioColaborador, cargoColaborador);
+				try {
+					ColaboradorDAO.salvar(c);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				carregarColaborador();
+				
+				JOptionPane.showMessageDialog(frame, c);
+			}
+		});
+		botaoColaboradorCB.setBackground(new Color(255, 250, 250));
+		botaoColaboradorCB.setBounds(710, 7, 88, 26);
+		panel_3.add(botaoColaboradorCB);
+		
+		JButton button_4 = new JButton("EDITAR");
+		button_4.setBackground(new Color(255, 250, 250));
+		button_4.setBounds(663, 434, 98, 26);
+		panel_3.add(button_4);
+		
+		JButton button_5 = new JButton("DELETAR");
+		button_5.setBackground(new Color(255, 250, 250));
+		button_5.setBounds(799, 434, 104, 26);
+		panel_3.add(button_5);
+		
+		JTextArea colaboradorTA = new JTextArea();
+		colaboradorTA.setEditable(false);
+		colaboradorTA.setBounds(12, 65, 891, 358);
+		panel_3.add(colaboradorTA);
+		
+		JTextArea colaboradoresTA = new JTextArea();
+		colaboradoresTA.setEditable(false);
+		colaboradoresTA.setBounds(12, 50, 891, 373);
+		panel_3.add(colaboradoresTA);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("SOBRE", null, panel_4, null);
+		panel_4.setLayout(null);
+		
+		JLabel lblGerao = new JLabel("GERA\u00C7\u00C3O 2050");
+		lblGerao.setFont(new Font("Dialog", Font.BOLD, 24));
+		lblGerao.setBounds(12, 50, 189, 47);
+		panel_4.add(lblGerao);
+		
+		JLabel lblMunicpioDeTubaro = new JLabel("MUNIC\u00CDPIO DE TUBAR\u00C3O");
+		lblMunicpioDeTubaro.setFont(new Font("Dialog", Font.BOLD, 24));
+		lblMunicpioDeTubaro.setBounds(506, 40, 292, 66);
+		panel_4.add(lblMunicpioDeTubaro);
+		
+		JLabel labelFotoGiGi = new JLabel("");
+		labelFotoGiGi.setBounds(12, 152, 80, 80);
+		labelFotoGiGi.setIcon(fotoGigi);
+		panel_4.add(labelFotoGiGi);
+		
+		JLabel lblAluno = new JLabel("Aluno:");
+		lblAluno.setFont(new Font("Dialog", Font.BOLD, 12));
+		lblAluno.setBounds(124, 152, 42, 16);
+		panel_4.add(lblAluno);
+		
+		JLabel lblIdade = new JLabel("Idade:");
+		lblIdade.setFont(new Font("Dialog", Font.BOLD, 12));
+		lblIdade.setBounds(329, 152, 42, 16);
+		panel_4.add(lblIdade);
+		
+		JLabel lblColgio = new JLabel("Col\u00E9gio:");
+		lblColgio.setFont(new Font("Dialog", Font.BOLD, 12));
+		lblColgio.setBounds(124, 180, 50, 16);
+		panel_4.add(lblColgio);
+		
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblEmail.setBounds(124, 208, 42, 16);
+		panel_4.add(lblEmail);
+		
+		JLabel lblGiovanaSoaresRosa = new JLabel("Giovana Soares Rosa");
+		lblGiovanaSoaresRosa.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblGiovanaSoaresRosa.setBounds(181, 152, 129, 16);
+		panel_4.add(lblGiovanaSoaresRosa);
+		
+		JLabel label = new JLabel("14");
+		label.setFont(new Font("Dialog", Font.PLAIN, 12));
+		label.setBounds(383, 152, 23, 16);
+		panel_4.add(label);
+		
+		JLabel lblEmebSoJudas = new JLabel(" EMEB S\u00E3o Judas Tadeu");
+		lblEmebSoJudas.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmebSoJudas.setBounds(178, 180, 139, 16);
+		panel_4.add(lblEmebSoJudas);
+		
+		JLabel lblGiovanasrosagmailcom = new JLabel("giovanasrosa5@gmail.com");
+		lblGiovanasrosagmailcom.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblGiovanasrosagmailcom.setBounds(178, 208, 165, 16);
+		panel_4.add(lblGiovanasrosagmailcom);
+		
+		labelFotoKaren = new JLabel("");
+		labelFotoKaren.setBounds(12, 250, 80, 80);
+		labelFotoKaren.setIcon(fotoKa);
+		panel_4.add(labelFotoKaren);
+		
+		JLabel lblAluno_1 = new JLabel("Aluno:");
+		lblAluno_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAluno_1.setBounds(124, 244, 55, 16);
+		panel_4.add(lblAluno_1);
+		
+		JLabel lblKarenNorberto = new JLabel("Karen Norberto");
+		lblKarenNorberto.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblKarenNorberto.setBounds(181, 244, 100, 16);
+		panel_4.add(lblKarenNorberto);
+		
+		JLabel lblIdade_1 = new JLabel("Idade:");
+		lblIdade_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblIdade_1.setBounds(319, 244, 55, 16);
+		panel_4.add(lblIdade_1);
+		
+		JLabel label_1 = new JLabel("15");
+		label_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		label_1.setBounds(376, 244, 55, 16);
+		panel_4.add(label_1);
+		
+		JLabel lblColgio_1 = new JLabel("Col\u00E9gio:");
+		lblColgio_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblColgio_1.setBounds(124, 272, 55, 16);
+		panel_4.add(lblColgio_1);
+		
+		JLabel lblEmebJooPaulo = new JLabel("EMEB Jo\u00E3o Paulo I Caic");
+		lblEmebJooPaulo.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmebJooPaulo.setBounds(181, 272, 136, 16);
+		panel_4.add(lblEmebJooPaulo);
+		
+		JLabel lblEmail_1 = new JLabel("Email: ");
+		lblEmail_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblEmail_1.setBounds(124, 300, 55, 16);
+		panel_4.add(lblEmail_1);
+		
+		JLabel lblKarennorbertogmailcom = new JLabel("karennorberto24@gmail.com");
+		lblKarennorbertogmailcom.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblKarennorbertogmailcom.setBounds(181, 300, 177, 16);
+		panel_4.add(lblKarennorbertogmailcom);
+		
+		JLabel label_2 = new JLabel("");
+		label_2.setBounds(480, 81, 55, 16);
+		panel_4.add(label_2);
+		
+		JLabel label_3 = new JLabel("");
+		label_3.setBounds(12, 348, 80, 80);
+		label_3.setIcon(fotoJuju);
+		panel_4.add(label_3);
+		
+		JLabel label_4 = new JLabel("Aluno:");
+		label_4.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_4.setBounds(124, 348, 55, 16);
+		panel_4.add(label_4);
+		
+		JLabel lblJuliaMendes = new JLabel("Julia Mendes");
+		lblJuliaMendes.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblJuliaMendes.setBounds(181, 348, 100, 16);
+		panel_4.add(lblJuliaMendes);
+		
+		JLabel label_6 = new JLabel("Idade:");
+		label_6.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_6.setBounds(319, 348, 55, 16);
+		panel_4.add(label_6);
+		
+		JLabel label_7 = new JLabel("14");
+		label_7.setFont(new Font("Dialog", Font.PLAIN, 12));
+		label_7.setBounds(376, 348, 55, 16);
+		panel_4.add(label_7);
+		
+		JLabel label_8 = new JLabel("Col\u00E9gio:");
+		label_8.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_8.setBounds(124, 376, 55, 16);
+		panel_4.add(label_8);
+		
+		JLabel lblEmebSoJudas_1 = new JLabel("EMEB S\u00E3o Judas Tadeu");
+		lblEmebSoJudas_1.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmebSoJudas_1.setBounds(181, 376, 136, 16);
+		panel_4.add(lblEmebSoJudas_1);
+		
+		JLabel label_10 = new JLabel("Email: ");
+		label_10.setFont(new Font("Tahoma", Font.BOLD, 11));
+		label_10.setBounds(124, 404, 55, 16);
+		panel_4.add(label_10);
+		
+		JLabel lblJuuliamendesssgmailcom = new JLabel("juuliamendesss@gmail.com");
+		lblJuuliamendesssgmailcom.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblJuuliamendesssgmailcom.setBounds(181, 404, 177, 16);
+		panel_4.add(lblJuuliamendesssgmailcom);
+		
+		JLabel lblProfessores = new JLabel("Professores:");
+		lblProfessores.setFont(new Font("Dialog", Font.BOLD, 17));
+		lblProfessores.setBounds(506, 152, 120, 16);
+		panel_4.add(lblProfessores);
+		
+		JLabel lblRafaelMeyer = new JLabel("RAFAEL MEYER");
+		lblRafaelMeyer.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblRafaelMeyer.setBounds(506, 196, 120, 16);
+		panel_4.add(lblRafaelMeyer);
+		
+		JLabel lblRafaelmeyeredusenaibr = new JLabel("rafael.meyer@edu.senai.br");
+		lblRafaelmeyeredusenaibr.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblRafaelmeyeredusenaibr.setBounds(638, 195, 160, 16);
+		panel_4.add(lblRafaelmeyeredusenaibr);
+		
+		JLabel lblMrcio = new JLabel("M\u00C1RCIO");
+		lblMrcio.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblMrcio.setBounds(506, 224, 55, 16);
+		panel_4.add(lblMrcio);
+		
+		JLabel lblEmailMrcio = new JLabel("m\u00E1rcio.junior@edu.sc.senai.br");
+		lblEmailMrcio.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmailMrcio.setBounds(638, 223, 177, 16);
+		panel_4.add(lblEmailMrcio);
+		
+		JLabel lblEdemilson = new JLabel("EDEMILSON");
+		lblEdemilson.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblEdemilson.setBounds(506, 252, 84, 16);
+		panel_4.add(lblEdemilson);
+		
+		JLabel lblEmailDoEdemilson = new JLabel("edemilson.vieira@edu.sc.senai.br");
+		lblEmailDoEdemilson.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmailDoEdemilson.setBounds(638, 251, 197, 16);
+		panel_4.add(lblEmailDoEdemilson);
+		
+		JLabel lblClavison = new JLabel("CLAVISON");
+		lblClavison.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		lblClavison.setBounds(506, 273, 84, 25);
+		panel_4.add(lblClavison);
+		
+		JLabel lblEmailDoClavison = new JLabel("clavison.zapeline@edu.sc.senai.br");
+		lblEmailDoClavison.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblEmailDoClavison.setBounds(638, 276, 221, 16);
+		panel_4.add(lblEmailDoClavison);
+		
+		JLabel lblLogo = new JLabel("");
+		lblLogo.setBounds(568, 310, 120, 120);
+		lblLogo.setIcon(fotoLogo);
+		panel_4.add(lblLogo);
+		
+		JLabel logoSenaiIbl = new JLabel("");
+		logoSenaiIbl.setBounds(259, 50, 184, 42);
+		logoSenaiIbl.setIcon(fotoSenai);
+		panel_4.add(logoSenaiIbl);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 228, 225));
+		tabbedPane.addTab("PRODUTOS", null, panel_1, null);
+		panel_1.setLayout(null);
+		
+		JLabel lblNome = new JLabel("NOME:");
+		lblNome.setBounds(12, 27, 55, 16);
+		panel_1.add(lblNome);
+		
+		produtoNomeTF = new JTextField();
+		produtoNomeTF.setBounds(61, 25, 114, 20);
+		panel_1.add(produtoNomeTF);
+		produtoNomeTF.setColumns(10);
+		
+		JLabel lblCategoria = new JLabel("CATEGORIA:");
+		lblCategoria.setBounds(193, 27, 75, 16);
+		panel_1.add(lblCategoria);
+		
+		produtosCategoriaCB = new JComboBox();
+		produtosCategoriaCB.setBackground(new Color(255, 255, 255));
+		produtosCategoriaCB.setBounds(282, 23, 188, 25);
+		panel_1.add(produtosCategoriaCB);
+		
+		JLabel lblPreo = new JLabel("PRE\u00C7O:");
+		lblPreo.setBounds(477, 27, 55, 16);
+		panel_1.add(lblPreo);
+		
+		produtosPrecoTF = new JTextField();
+		produtosPrecoTF.setBounds(550, 25, 114, 20);
+		panel_1.add(produtosPrecoTF);
+		produtosPrecoTF.setColumns(10);
+		
+		JLabel lblEstoque = new JLabel("ESTOQUE:");
+		lblEstoque.setBounds(682, 27, 67, 16);
+		panel_1.add(lblEstoque);
+		
+		produtosEstoqueTF = new JTextField();
+		produtosEstoqueTF.setBounds(767, 25, 40, 20);
+		panel_1.add(produtosEstoqueTF);
+		produtosEstoqueTF.setColumns(10);
+		
+		JButton btnSalvar = new JButton("SALVAR");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO Salvar Produtos
+				String nomeProduto = "";
+				CategoriaEntity categoria;
+				Double precoProduto = 0.0;
+				Integer estoqueProduto = 0;
+				
+				nomeProduto = produtoNomeTF.getText();
+				categoria = categorias.get(produtosCategoriaCB.getSelectedIndex());
+				estoqueProduto = Integer.parseInt(produtosEstoqueTF.getText());
+				precoProduto = Double.parseDouble(produtosPrecoTF.getText());
+				
+				ProdutoEntity p = new ProdutoEntity(null,categoria, nomeProduto, precoProduto, estoqueProduto);
+				
+				try {
+					ProdutoDAO.salvar(p);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				
+				JOptionPane.showMessageDialog(frame, p);
+				
+				
+			}
+		});
+		btnSalvar.setBackground(new Color(255, 250, 250));
+		btnSalvar.setFont(new Font("Dialog", Font.PLAIN, 11));
+		btnSalvar.setBounds(817, 22, 86, 26);
+		panel_1.add(btnSalvar);
+		
+		JButton btnEditar = new JButton("EDITAR");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnEditar.setBackground(new Color(255, 250, 250));
+		btnEditar.setBounds(639, 433, 98, 26);
+		panel_1.add(btnEditar);
+		
+		JButton btnNewButton = new JButton("DELETAR");
+		btnNewButton.setBackground(new Color(255, 250, 250));
+		btnNewButton.setBounds(775, 433, 104, 26);
+		panel_1.add(btnNewButton);
+		//panel_1.add(produtoTA);
+		
+		JTextArea produtoTA = new JTextArea();
+		produtoTA.setEditable(false);
+		produtoTA.setBounds(24, 66, 879, 356);
+		//panel_1.add(produtoTArregarCategorias() {
+		StringBuffer sb = new StringBuffer();
+		categorias = new ArrayList<CategoriaEntity>();
+		produtosCategoriaCB.removeAllItems();
+		
+		try {
+			categorias = CategoriaDAO.buscar();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < categorias.size(); i++) {
+			sb.append("ID: "+categorias.get(i).getId()+"\t");
+			sb.append("NOME: "+categorias.get(i).getNome()+"\t\t\t");
+			sb.append("DESCRICAO: "+categorias.get(i).getDescricao()+"\n");
+			
+			produtosCategoriaCB.addItem(categorias.get(i).getNome());
+			
+		}
+		
+		categoriaTA.setText(sb.toString());
+		
+	}
+	//TODO CARREGAR CLIENTES
+	public static void carregarClientes() {
+		StringBuffer sb = new StringBuffer();
+		clientes = new ArrayList<ClienteEntity>();
+		
+		try {
+			clientes = ClienteDAO.buscar();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < clientes.size(); i++) {
+			sb.append("ID: "+clientes.get(i).getId()+"\t");
+			sb.append("NOME: "+clientes.get(i).getNome()+"\t");
+			sb.append("CPF: "+clientes.get(i).getCpf()+"\t");
+			sb.append("ANIVERS�RIO: "+clientes.get(i).getAniversario()+"\t");
+			sb.append("TELEFONE: "+clientes.get(i).getTelefone()+"\t"+"\n");
+			
+		}
+		
+		clientesTA.setText(sb.toString());
+		
+	}
+	
+	public static void carregarColaboradores() {
+		StringBuffer sb = new StringBuffer();
+		colaboradores = new ArrayList<ColaboradorEntity>();
+		
+		try {
+			colaboradores = ColaboradorDAO.buscar();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < colaboradores.size(); i++) {
+			sb.append("ID: "+colaboradores.get(i).getId()+"\t");
+			sb.append("NOME: "+colaboradores.get(i).getNome()+"\t");
+			sb.append("CPF: "+colaboradores.get(i).getCpf()+"\t");
+			sb.append("DATA: "+colaboradores.get(i).getData()+"\t");
+			sb.append("CARGO: "+colaboradores.get(i).getCargo()+"\t"+"\n");
+			
+		}
+		
+		colaboradoreJTextArea.setText(sb.toString());
+		
+	}
+	
+	public static void carregarColaborador() {
+		StringBuffer sb = new StringBuffer();
+		colaboradores = new ArrayList<ColaboradorEntity>();
+		
+		try {
+			colaboradores = ColaboradorDAO.buscar();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < colaboradores.size(); i++) {
+			sb.append("ID: "+colaboradores.get(i).getId()+"\t");
+			sb.append("NOME: "+colaboradores.get(i).getNome()+"\t");
+			sb.append("CPF: "+colaboradores.get(i).getCpf()+"\t");
+			sb.append("DATA: "+colaboradores.get(i).getData()+"\t");
+			sb.append("CARGO: "+colaboradores.get(i).getCargo()+"\t"+"\n");
+			
+		}
+		
+		colaboradoreJTextArea.setText(sb.toString());
+		
+	}
+	
+}
