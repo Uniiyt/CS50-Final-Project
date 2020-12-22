@@ -1,4 +1,5 @@
 # CS50-Final-Project
+
 # About:
 
 The project was developed using the acquired knowledge during the course.
@@ -24,3 +25,5 @@ The project was developed using the:
 - Packages
 - Interface
 - Constructors
+
+submit50 cs50/problems/2020/x/project
